@@ -139,6 +139,10 @@ func (pp *proportionPlugin) OnSessionOpen(ssn *framework.Session) {
 
 		if job.PodGroup.Status.Phase == scheduling.PodGroupInqueue {
 			attr.inqueue.Add(job.GetMinResources())
+		} else if job.PodGroup.Status.Phase == scheduling.PodGroupRunning {
+			if job.GetMinResources() != nil && job.Allocated.LessEqual(job.GetMinResources(), api.Zero) {
+				attr.inqueue.Add(job.GetMinResources().Sub(job.Allocated))
+			}
 		}
 
 		// calculate inqueue resource for running jobs
