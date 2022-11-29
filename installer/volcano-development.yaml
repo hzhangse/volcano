@@ -131,6 +131,15 @@ spec:
         app: volcano-admission
     spec:
       serviceAccount: volcano-admission
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: type
+                    operator: NotIn
+                    values:
+                      - virtual-kubelet      
       containers:
         - args:
             - --tls-cert-file=/admission.local.config/certificates/tls.crt
@@ -174,6 +183,15 @@ spec:
   template:
     spec:
       serviceAccountName: volcano-admission
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: type
+                    operator: NotIn
+                    values:
+                      - virtual-kubelet         
       restartPolicy: Never
       containers:
         - name: main
@@ -8473,6 +8491,15 @@ spec:
         app: volcano-controller
     spec:
       serviceAccount: volcano-controllers
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: type
+                    operator: NotIn
+                    values:
+                      - virtual-kubelet       
       containers:
           - name: volcano-controllers
             image: volcanosh/vc-controller-manager:latest
@@ -8625,6 +8652,15 @@ spec:
         app: volcano-scheduler
     spec:
       serviceAccount: volcano-scheduler
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: type
+                    operator: NotIn
+                    values:
+                      - virtual-kubelet         
       containers:
         - name: volcano-scheduler
           image: volcanosh/vc-scheduler:latest

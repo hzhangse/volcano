@@ -59,7 +59,10 @@ func Run(opt *options.ServerOption) error {
 	if opt.PrintVersion {
 		version.PrintVersionAndExit()
 	}
-
+	// klog.InitFlags(nil)
+	// flag.Set("logtostderr", "false") //日志输出到stderr，不输出到日志文件。false为关闭
+	// flag.Set("log_file", "myfile.log")
+	// flag.Parse()
 	config, err := kube.BuildConfig(opt.KubeClientOptions)
 	if err != nil {
 		return err

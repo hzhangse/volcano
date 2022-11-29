@@ -15,9 +15,10 @@
 BIN_DIR=_output/bin
 RELEASE_DIR=_output/release
 REPO_PATH=volcano.sh/volcano
-IMAGE_PREFIX=volcanosh/vc
+IMAGE_PREFIX=kyligence/vc
 CRD_OPTIONS ?= "crd:crdVersions=v1,generateEmbeddedObjectMeta=true"
 CC ?= "gcc"
+REGISTRY_NAME=registry.cn-shanghai.aliyuncs.com
 SUPPORT_PLUGINS ?= "no"
 CRD_VERSION ?= v1
 
@@ -91,12 +92,13 @@ images: image_bins
 	for name in controller-manager scheduler webhook-manager; do\
 		cp ${BIN_DIR}/${REL_OSARCH}/vc-$$name ./installer/dockerfile/$$name/;\
 		if [ ${REL_OSARCH} = linux/amd64 ];then\
-			docker build --no-cache -t $(IMAGE_PREFIX)-$$name:$(TAG) ./installer/dockerfile/$$name;\
+			docker build --no-cache -t ${REGISTRY_NAME}/$(IMAGE_PREFIX)-$$name:$(TAG) ./installer/dockerfile/$$name;\
 		elif [ ${REL_OSARCH} = linux/arm64 ];then\
-			docker build --no-cache -t $(IMAGE_PREFIX)-$$name-arm64:$(TAG) -f ./installer/dockerfile/$$name/Dockerfile.arm64 ./installer/dockerfile/$$name;\
+			docker build --no-cache -t ${REGISTRY_NAME}/$(IMAGE_PREFIX)-$$name-arm64:$(TAG) -f ./installer/dockerfile/$$name/Dockerfile.arm64 ./installer/dockerfile/$$name;\
 		else\
 			echo "only support x86_64 and arm64. Please build image according to your architecture";\
 		fi;\
+		docker push ${REGISTRY_NAME}/$(IMAGE_PREFIX)-$$name:$(TAG);\
 		rm installer/dockerfile/$$name/vc-$$name;\
 	done
 

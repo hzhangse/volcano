@@ -20,8 +20,10 @@ import (
 	"context"
 	"os"
 	"os/signal"
+	"syscall"
 )
 
+var shutdownSignals = []os.Signal{os.Interrupt, syscall.SIGTERM}
 var onlyOneSignalHandler = make(chan struct{})
 var shutdownHandler chan os.Signal
 
